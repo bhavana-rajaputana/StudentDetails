@@ -1,0 +1,114 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome to the Student Management System</h1>
+</div>
+
+<!-- Student Form for Adding a Student (POST) -->
+<div class="container mt-4">
+    <h2>Add a Student</h2>
+    <form id="addStudentForm">
+        <div class="form-group">
+            <label for="studentId">Student ID (optional)</label>
+            <input type="number" class="form-control" id="studentId" />
+        </div>
+        <div class="form-group">
+            <label for="studentName">Name</label>
+            <input type="text" class="form-control" id="studentName" required />
+        </div>
+        <div class="form-group">
+            <label for="studentAge">Age</label>
+            <input type="number" class="form-control" id="studentAge" required />
+        </div>
+        <div class="form-group">
+            <label for="studentCourse">Course</label>
+            <input type="text" class="form-control" id="studentCourse" required />
+        </div>
+        <button type="button" class="btn btn-primary" onclick="submitStudentForm()">Submit</button>
+    </form>
+</div>
+
+<!-- JavaScript function to handle form submission (POST) -->
+<script>
+    function submitStudentForm() {
+        const formData = new FormData();
+        formData.append('Id', document.getElementById('studentId').value || null);
+        formData.append('Name', document.getElementById('studentName').value);
+        formData.append('Age', document.getElementById('studentAge').value);
+        formData.append('Course', document.getElementById('studentCourse').value);
+
+        fetch('/StudentDetails', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert("Student added successfully!");
+                } else {
+                    response.text().then(text => alert(`Error adding student: ${text}`));
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+</script>
+
+<!-- Form for Getting All Students (GET) -->
+<div class="container mt-4">
+    <h2>Get All Students</h2>
+    <form asp-controller="StudentDetails" asp-action="GetAllStudents" method="get">
+        <button type="submit" class="btn btn-secondary">Fetch Students</button>
+    </form>
+</div>
+
+<!-- Form for Getting Student by ID (GET by ID) -->
+<div class="container mt-4">
+    <h2>Get Student by ID</h2>
+    <form asp-controller="StudentDetails" asp-action="GetStudentById" method="get">
+        <div class="form-group">
+            <label for="studentId">Student ID</label>
+            <input type="number" class="form-control" id="studentId" name="id" required />
+        </div>
+        <button type="submit" class="btn btn-secondary">Fetch Student</button>
+    </form>
+</div>
+
+
+<!-- Form for Updating a Student (PUT) -->
+<div class="container mt-4">
+    <h2>Update a Student</h2>
+    <form action="/StudentDetails/UpdateStudent" method="post">
+        <input type="hidden" name="_method" value="PUT" /> <!-- ASP.NET can use POST for PUT via _method -->
+        <div class="form-group">
+            <label for="studentIdUpdate">Student ID</label>
+            <input type="number" class="form-control" id="studentIdUpdate" name="id" required />
+        </div>
+        <div class="form-group">
+            <label for="studentNameUpdate">New Name</label>
+            <input type="text" class="form-control" id="studentNameUpdate" name="name" required />
+        </div>
+        <div class="form-group">
+            <label for="studentAgeUpdate">New Age</label>
+            <input type="number" class="form-control" id="studentAgeUpdate" name="age" required />
+        </div>
+        <div class="form-group">
+            <label for="studentCourseUpdate">New Course</label>
+            <input type="text" class="form-control" id="studentCourseUpdate" name="course" required />
+        </div>
+        <button type="submit" class="btn btn-warning">Update Student</button>
+    </form>
+</div>
+
+<!-- Form for Deleting a Student (DELETE) -->
+<div class="container mt-4">
+    <h2>Delete a Student</h2>
+    <form action="/StudentDetails/DeleteStudent" method="post">
+        <input type="hidden" name="_method" value="DELETE" /> 
+        <div class="form-group">
+            <label for="studentIdDelete">Student ID</label>
+            <input type="number" class="form-control" id="studentIdDelete" name="id" required />
+        </div>
+        <button type="submit" class="btn btn-danger">Delete Student</button>
+    </form>
+</div>
